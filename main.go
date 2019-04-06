@@ -15,7 +15,6 @@ Usage:
   layout [options] -P [-k]
   layout [options] -P [-m] [<state>...]
   layout [options] -P [-m] -f <file>
-
   layout [options] -W [-f <file>]
   layout -h | --help
   layout --version
