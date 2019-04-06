@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"strings"
 )
 
 func printLayoutStates(
@@ -20,7 +19,7 @@ func printLayoutStates(
 
 		fmt.Println(state)
 
-		hold := strings.Split(state, "+")
+		hold := reState.Split(state, -1)
 
 		for _, name := range hold {
 			_, ok := keys[name]

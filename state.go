@@ -4,8 +4,13 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"regexp"
 	"sort"
 	"strings"
+)
+
+var (
+	reState = regexp.MustCompile(`[\+/]`)
 )
 
 func readStates(filename string) ([]string, error) {
@@ -35,7 +40,7 @@ func groupStates(layout *Layout, states []string) []string {
 
 	table := map[string]map[string]struct{}{}
 	for _, state := range states {
-		keys := strings.Split(state, "+")
+		keys := reState.Split(state, -1)
 
 		mods, taps := splitKeys(keysTable, keys)
 		sort.Strings(mods)
@@ -58,11 +63,15 @@ func groupStates(layout *Layout, states []string) []string {
 			taps = append(taps, tap)
 		}
 
+		if len(taps) == 0 {
+			continue
+		}
+
 		sort.Strings(taps)
 
 		chunks := []string{}
 		chunks = append(chunks, mods)
-		chunks = append(chunks, taps...)
+		chunks = append(chunks, strings.Join(taps, "/"))
 
 		groups = append(groups, strings.Join(chunks, "+"))
 	}

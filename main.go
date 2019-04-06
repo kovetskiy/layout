@@ -48,9 +48,17 @@ func main() {
 
 	layout := DefaultLayout
 
+	states, _ := args["<state>"].([]string)
+	if filename, ok := args["-f"].(string); ok {
+		states, err = readStates(filename)
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}
+
 	switch {
 	case args["-W"].(bool):
-		watchAndDraw(layout, style)
+		watchAndDraw(layout, style, states)
 
 	case args["-P"].(bool):
 		if args["-k"].(bool) {
@@ -61,15 +69,6 @@ func main() {
 		fallthrough
 
 	default:
-		states, _ := args["<state>"].([]string)
-
-		if filename, ok := args["-f"].(string); ok {
-			states, err = readStates(filename)
-			if err != nil {
-				log.Fatalln(err)
-			}
-		}
-
 		if args["-m"].(bool) {
 			states = groupStates(layout, states)
 		}

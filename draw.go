@@ -2,7 +2,7 @@ package main
 
 import "github.com/gdamore/tcell"
 
-func watchAndDraw(layout *Layout, style *Style) {
+func watchAndDraw(layout *Layout, style *Style, states []string) {
 	var (
 		up   = make(chan string)
 		down = make(chan string)
