@@ -25,7 +25,8 @@ func printLayoutStates(
 		for _, name := range hold {
 			_, ok := keys[name]
 			if !ok {
-				log.Fatalf("unexpected key given: %s", name)
+				log.Printf("unexpected key given: %s", name)
+				continue
 			}
 
 			keys[name].Hold = true

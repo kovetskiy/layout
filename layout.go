@@ -100,13 +100,13 @@ var (
 			{
 				Keys: []Key{
 					{Name: "LEFTCTRL", Label: "CTRL", Mod: true},
-					{Name: "LEFTMETA", Label: "META", Width: 4, Mod: true},
+					{Name: "LEFTMETA", Label: "META", Mod: true},
 					{Name: "LEFTALT", Label: "ALT", Width: 4, Mod: true},
 					{Name: "SPACE", Label: "SPACE", Width: 32},
 					{Name: "RIGHTALT", Label: "ALT", Width: 4, Mod: true},
-					{Name: "RIGHTMETA", Label: "META", Width: 4, Mod: true},
+					{Name: "RIGHTMETA", Label: "META", Mod: true},
 					{Name: "?FN?", Label: "FN", Width: 4},
-					{Name: "RIGHTCTRL", Label: "CTRL", Width: 4, Mod: true},
+					{Name: "RIGHTCTRL", Label: "CTRL", Mod: true},
 				},
 			},
 		},

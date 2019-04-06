@@ -1,10 +1,34 @@
 package main
 
 import (
+	"bufio"
 	"log"
+	"os"
 	"sort"
 	"strings"
 )
+
+func readStates(filename string) ([]string, error) {
+	if filename == "-" {
+		filename = "/dev/stdin"
+	}
+
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	defer file.Close()
+
+	states := []string{}
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		states = append(states, scanner.Text())
+	}
+
+	return states, scanner.Err()
+}
 
 func groupStates(layout *Layout, states []string) []string {
 	keysTable := getKeysTable(layout)
@@ -53,7 +77,8 @@ func splitKeys(
 	for _, name := range keys {
 		_, ok := table[name]
 		if !ok {
-			log.Fatalf("unexpected key given: %s", name)
+			log.Printf("unexpected key given: %s", name)
+			continue
 		}
 
 		if table[name].Mod {

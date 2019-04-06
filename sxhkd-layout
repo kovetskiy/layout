@@ -1,0 +1,12 @@
+#!/bin/bash
+
+grep '^\w' ~/.config/sxhkd/sxhkdrc \
+    | tr '[[:lower:]]' '[[:upper:]]' \
+    | sed \
+        -e s/CONTROL/CAPSLOCK/ \
+        -e s/ALT/LEFTMETA/ \
+        -e s/SUPER/LEFTALT/ \
+        -e s/SHIFT/LEFTSHIFT/ \
+        -e s/RETURN/ENTER/ \
+        -e 's/ //g'
+

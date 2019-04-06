@@ -112,6 +112,16 @@ func (key *Key) GetWidth() int {
 		width = DefaultKeyWidth
 	}
 
+	label := key.Label
+	if label == "" {
+		label = key.Name
+	}
+
+	labelLen := len(label)
+	if width < len(label) {
+		width = labelLen
+	}
+
 	width += 2 // vertical lines / corners
 	width += key.Margin
 

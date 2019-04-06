@@ -14,6 +14,8 @@ var (
 Usage:
   layout [options] -P [-k]
   layout [options] -P [-m] [<state>...]
+  layout [options] -P [-m] -f <file>
+
   layout [options] -W [-f <file>]
   layout -h | --help
   layout --version
@@ -60,6 +62,13 @@ func main() {
 
 	default:
 		states, _ := args["<state>"].([]string)
+
+		if filename, ok := args["-f"].(string); ok {
+			states, err = readStates(filename)
+			if err != nil {
+				log.Fatalln(err)
+			}
+		}
 
 		if args["-m"].(bool) {
 			states = groupStates(layout, states)

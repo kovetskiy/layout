@@ -7,6 +7,7 @@ func watchAndDraw(layout *Layout, style *Style) {
 		up   = make(chan string)
 		down = make(chan string)
 	)
+	go watchKeyPress(up, down)
 
 	screen, err := tcell.NewScreen()
 	if err != nil {
@@ -34,17 +35,17 @@ func watchAndDraw(layout *Layout, style *Style) {
 		}
 	}()
 
-	go watchKeyPress(up, down)
-
 	var styleTapHold tcell.Style
-	styleTapHold.Background(tcell.Color(style.Tap.Hold.Background))
-	styleTapHold.Foreground(tcell.Color(style.Tap.Hold.Foreground))
+	styleTapHold = styleTapHold.Background(tcell.Color(style.Tap.Hold.Background))
+	styleTapHold = styleTapHold.Foreground(tcell.Color(style.Tap.Hold.Foreground))
 
 	var styleModHold tcell.Style
-	styleModHold.Background(tcell.Color(style.Mod.Hold.Background))
-	styleModHold.Foreground(tcell.Color(style.Mod.Hold.Foreground))
+	styleModHold = styleModHold.Background(tcell.Color(style.Mod.Hold.Background))
+	styleModHold = styleModHold.Foreground(tcell.Color(style.Mod.Hold.Foreground))
 
 	keys := getKeysTable(layout)
+
+	screen.Show()
 loop:
 	for {
 		var name string
