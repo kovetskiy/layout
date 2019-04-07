@@ -1,0 +1,17 @@
+#!/bin/bash
+
+grep -Po '^bindsym\s*\K[^\s]+' ~/.i3/config \
+    | tr '[[:lower:]]' '[[:upper:]]' \
+    | sed -r \
+        -e 's/\$ALT/LEFTALT/' \
+        -e 's/\$WIN/LEFTMETA/' \
+        -e 's/CTRL/CAPSLOCK/' \
+        -e 's/ESCAPE/ESC/' \
+        -e 's/(^|\+)SHIFT/\1LEFTSHIFT/' \
+        -e 's/ISO_LEVEL5_SHIFT/RIGHTSHIFT/' \
+        -e 's/HOME/LEFTALT+U/' \
+        -e 's/NEXT/LEFTALT+I/' \
+        -e 's/PRIOR/LEFTALT+O/' \
+        -e 's/END/LEFTALT+P/' \
+        -e 's/ //g'
+

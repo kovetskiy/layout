@@ -7,11 +7,10 @@ import (
 
 func printLayoutStates(
 	layout *Layout,
+	layoutKeys map[string]*Key,
 	style *Style,
 	states []string,
 ) {
-	keys := getKeysTable(layout)
-
 	for i, state := range states {
 		if i > 0 {
 			fmt.Println()
@@ -22,13 +21,13 @@ func printLayoutStates(
 		hold := reState.Split(state, -1)
 
 		for _, name := range hold {
-			_, ok := keys[name]
+			_, ok := layoutKeys[name]
 			if !ok {
 				log.Printf("unexpected key given: %s", name)
 				continue
 			}
 
-			keys[name].Hold = true
+			layoutKeys[name].Hold = true
 		}
 
 		printLayout(layout, style)

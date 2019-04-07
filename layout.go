@@ -26,6 +26,9 @@ var (
 					{Name: "F10"},
 					{Name: "F11"},
 					{Name: "F12"},
+					{Name: "SYSRQ", Label: "SYSRQ", Width: 6, Margin: 2},
+					{Name: "SCROLLLOCK", Label: "SLOCK", Width: 6},
+					{Name: "PAUSE", Label: "PAUSE", Width: 6},
 				},
 			},
 			{
@@ -43,7 +46,10 @@ var (
 					{Name: "0"},
 					{Name: "MINUS", Label: "-"},
 					{Name: "EQUAL", Label: "="},
-					{Name: "BACKSPACE"},
+					{Name: "BACKSPACE", Width: 7},
+					{Name: "INSERT", Label: "INSERT", Width: 6, Margin: 2},
+					{Name: "HOME", Label: "HOME", Width: 6},
+					{Name: "PAGEUP", Label: "PAGEUP", Width: 6},
 				},
 			},
 			{
@@ -62,6 +68,9 @@ var (
 					{Name: "LEFTBRACE", Label: "["},
 					{Name: "RIGHTBRACE", Label: "]"},
 					{Name: "BACKSLASH", Label: "\\", Width: 7},
+					{Name: "DELETE", Label: "DELETE", Width: 6, Margin: 2},
+					{Name: "END", Label: "END", Width: 6},
+					{Name: "PAGEDOWN", Label: "PAGEDN", Width: 6},
 				},
 			},
 			{
@@ -95,6 +104,7 @@ var (
 					{Name: "DOT", Label: "."},
 					{Name: "SLASH", Label: "/"},
 					{Name: "RIGHTSHIFT", Label: "SHIFT", Width: 14, Mod: true},
+					{Name: "UP", Label: "UP", Width: 6, Margin: 10},
 				},
 			},
 			{
@@ -107,6 +117,9 @@ var (
 					{Name: "RIGHTMETA", Label: "META", Mod: true},
 					{Name: "?FN?", Label: "FN", Width: 4},
 					{Name: "RIGHTCTRL", Label: "CTRL", Mod: true},
+					{Name: "LEFT", Label: "LEFT", Width: 6, Margin: 2},
+					{Name: "DOWN", Label: "DOWN", Width: 6},
+					{Name: "RIGHT", Label: "RIGHT", Width: 6},
 				},
 			},
 		},
@@ -128,7 +141,7 @@ func addKeyXY(layout *Layout) {
 
 func (layout *Layout) Reset() {
 	for rowIndex, row := range layout.Rows {
-		for keyIndex, _ := range row.Keys {
+		for keyIndex := range row.Keys {
 			layout.Rows[rowIndex].Keys[keyIndex].Hold = false
 		}
 	}

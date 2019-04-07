@@ -13,6 +13,39 @@ var (
 	reState = regexp.MustCompile(`[\+/]`)
 )
 
+type StateGroup struct {
+	Mods []string
+	Taps []string
+}
+
+func (group *StateGroup) All() []string {
+	all := []string{}
+	all = append(all, group.Mods...)
+	all = append(all, group.Taps...)
+	return all
+}
+
+func groupStates(
+	layoutKeys map[string]*Key,
+	states []string,
+) []StateGroup {
+	combined := combineStates(layoutKeys, states)
+
+	groups := []StateGroup{}
+	for _, comb := range combined {
+		mods, taps := splitKeys(layoutKeys, reState.Split(comb, -1))
+
+		group := StateGroup{
+			Mods: mods,
+			Taps: taps,
+		}
+
+		groups = append(groups, group)
+	}
+
+	return groups
+}
+
 func readStates(filename string) ([]string, error) {
 	if filename == "-" {
 		filename = "/dev/stdin"
@@ -35,14 +68,15 @@ func readStates(filename string) ([]string, error) {
 	return states, scanner.Err()
 }
 
-func groupStates(layout *Layout, states []string) []string {
-	keysTable := getKeysTable(layout)
-
+func combineStates(
+	layoutKeys map[string]*Key,
+	states []string,
+) []string {
 	table := map[string]map[string]struct{}{}
 	for _, state := range states {
 		keys := reState.Split(state, -1)
 
-		mods, taps := splitKeys(keysTable, keys)
+		mods, taps := splitKeys(layoutKeys, keys)
 		sort.Strings(mods)
 
 		stateMods := strings.Join(mods, "+")
@@ -59,7 +93,7 @@ func groupStates(layout *Layout, states []string) []string {
 	groups := []string{}
 	for mods, stateTaps := range table {
 		taps := []string{}
-		for tap, _ := range stateTaps {
+		for tap := range stateTaps {
 			taps = append(taps, tap)
 		}
 

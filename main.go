@@ -10,12 +10,12 @@ var (
 	version = "[manual build]"
 	usage   = "layout " + version + `
 
-
 Usage:
   layout [options] -P [-k]
   layout [options] -P [-m] [<state>...]
   layout [options] -P [-m] -f <file>
   layout [options] -W [-f <file>]
+  layout [options] -T
   layout -h | --help
   layout --version
 
@@ -46,6 +46,7 @@ func main() {
 	}
 
 	layout := DefaultLayout
+	layoutKeys := getKeysTable(layout)
 
 	states, _ := args["<state>"].([]string)
 	if filename, ok := args["-f"].(string); ok {
@@ -57,7 +58,9 @@ func main() {
 
 	switch {
 	case args["-W"].(bool):
-		watchAndDraw(layout, style, states)
+		groups := groupStates(layoutKeys, states)
+
+		watchAndDraw(layout, layoutKeys, style, groups)
 
 	case args["-P"].(bool):
 		if args["-k"].(bool) {
@@ -69,13 +72,9 @@ func main() {
 
 	default:
 		if args["-m"].(bool) {
-			states = groupStates(layout, states)
+			states = combineStates(layoutKeys, states)
 		}
 
-		printLayoutStates(
-			layout,
-			style,
-			states,
-		)
+		printLayoutStates(layout, layoutKeys, style, states)
 	}
 }

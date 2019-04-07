@@ -8,5 +8,7 @@ grep '^\w' ~/.config/sxhkd/sxhkdrc \
         -e s/SUPER/LEFTALT/ \
         -e s/SHIFT/LEFTSHIFT/ \
         -e s/RETURN/ENTER/ \
+        -e s/DELETE/LEFTALT+RIGHTBRACE/ \
+        -e s/INSERT/LEFTALT+Y/ \
         -e 's/ //g'
 

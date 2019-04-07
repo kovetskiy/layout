@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -68,17 +69,6 @@ func listenDevice(
 	}
 }
 
-func listenDevices(inbox chan Event) {
-	for devicePath, device := range getInputDevices() {
-		_ = devicePath
-		go listenDevice(
-			//devicePath,
-			device,
-			inbox,
-		)
-	}
-}
-
 func getInputDevices() map[string]*evdev.InputDevice {
 	inputDevices := make(map[string]*evdev.InputDevice)
 
@@ -99,10 +89,7 @@ func getInputDevices() map[string]*evdev.InputDevice {
 	return inputDevices
 }
 
-func watchKeyPress(
-	up chan string,
-	down chan string,
-) {
+func watchKeyPress() (up, down chan string, err error) {
 	display, err := openDisplay()
 	if err != nil {
 		panic(err)
@@ -111,29 +98,47 @@ func watchKeyPress(
 	defer closeDisplay(display)
 
 	events := make(chan Event, 8)
-	listenDevices(events)
 
-	for {
-		select {
-		case event := <-events:
-			for _, item := range event.Items {
-				if item.Type != evdev.EV_KEY {
-					continue
-				}
+	devices := getInputDevices()
+	if len(devices) == 0 {
+		return nil, nil, errors.New("unable to open devices (requires root privileges)")
+	}
 
-				if item.Value == 2 {
-					continue
-				}
+	for _, device := range devices {
+		go listenDevice(
+			device,
+			events,
+		)
+	}
 
-				key := strings.TrimPrefix(evdev.KEY[int(item.Code)], "KEY_")
+	up = make(chan string)
+	down = make(chan string)
 
-				switch item.Value {
-				case 0:
-					up <- key
-				case 1:
-					down <- key
+	go func() {
+		for {
+			select {
+			case event := <-events:
+				for _, item := range event.Items {
+					if item.Type != evdev.EV_KEY {
+						continue
+					}
+
+					if item.Value == 2 {
+						continue
+					}
+
+					key := strings.TrimPrefix(evdev.KEY[int(item.Code)], "KEY_")
+
+					switch item.Value {
+					case 0:
+						up <- key
+					case 1:
+						down <- key
+					}
 				}
 			}
 		}
-	}
+	}()
+
+	return up, down, nil
 }
